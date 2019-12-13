@@ -38,7 +38,7 @@ describe('List items', () => {
       .and('not.contain', 'Milk');
   });
 
-  it.only('Mark an incomplete item complete', () => {
+  it('Mark an incomplete item complete', () => {
     cy.fixture('todos')
       .then(todos => {
         const target = Cypress._.head(todos);

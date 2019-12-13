@@ -10,6 +10,7 @@ import {
   updateTodo,
   destroyTodo
 } from '../lib/service';
+import { filterTodos } from '../lib/utils';
 
 
 export default class TodoApp extends Component {
@@ -98,11 +99,13 @@ export default class TodoApp extends Component {
             />
           </header>
           <section className="main">
-            <TodoList
-              todos={this.state.todos}
-              handleToggleTodo={this.handleToggle}
-              handleDeleteTodo={this.handleDeleteTodo}
-            />
+            <Route path='/:filter?' render={({ match }) =>
+              <TodoList
+                todos={filterTodos(match.params.filter, this.state.todos)}
+                handleToggleTodo={this.handleToggle}
+                handleDeleteTodo={this.handleDeleteTodo}
+              />
+            } />
           </section>
           <Footer remaining={remaining} />
         </div>
