@@ -4,7 +4,7 @@ import TodoForm from './TodoForm'
 import TodoList from './TodoList'
 import Footer from './Footer'
 
-import { saveTodo } from '../lib/service';
+import { loadTodos, saveTodo } from '../lib/service';
 
 
 export default class TodoApp extends Component {
@@ -18,6 +18,12 @@ export default class TodoApp extends Component {
 
     this.handleNewTodoChange = this.handleNewTodoChange.bind(this);
     this.handleTodoSubmit = this.handleTodoSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    loadTodos()
+      .then(({ data }) => this.setState({ todos: data }))
+      .catch(() => this.setState({ error: true }));
   }
 
   handleNewTodoChange(evt) {
@@ -39,7 +45,7 @@ export default class TodoApp extends Component {
         todos: this.state.todos.concat(data),
         currentTodo: ''
       }))
-      .catch(() => this.setState({ error: true }))
+      .catch(() => this.setState({ error: true }));
   }
 
   render () {
