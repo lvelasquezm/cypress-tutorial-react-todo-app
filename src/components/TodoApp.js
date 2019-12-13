@@ -7,6 +7,7 @@ import Footer from './Footer'
 import {
   loadTodos,
   saveTodo,
+  updateTodo,
   destroyTodo
 } from '../lib/service';
 
@@ -21,8 +22,9 @@ export default class TodoApp extends Component {
     }
 
     this.handleNewTodoChange = this.handleNewTodoChange.bind(this);
-    this.handleTodoSubmit = this.handleTodoSubmit.bind(this);
     this.handleDeleteTodo = this.handleDeleteTodo.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleTodoSubmit = this.handleTodoSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -42,6 +44,22 @@ export default class TodoApp extends Component {
       .then(() => this.setState({
         todos: this.state.todos.filter(todo => todo.id !== id)
       }))
+  }
+
+  handleToggle(id) {
+    const targetTodo = this.state.todos.find(todo => todo.id === id);
+    const updatedTodo = {
+      ...targetTodo,
+      isComplete: !targetTodo.isComplete
+    };
+
+    updateTodo(updatedTodo)
+      .then(({ data }) => {
+        const todos = this.state.todos.map(
+          todo => todo.id === data.id ? data : todo
+        );
+        this.setState({ todos: todos });
+      });
   }
 
   handleTodoSubmit(evt) {
@@ -82,6 +100,7 @@ export default class TodoApp extends Component {
           <section className="main">
             <TodoList
               todos={this.state.todos}
+              handleToggleTodo={this.handleToggle}
               handleDeleteTodo={this.handleDeleteTodo}
             />
           </section>
