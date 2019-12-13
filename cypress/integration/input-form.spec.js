@@ -3,12 +3,12 @@ describe('Input form', () => {
     cy.seedAndVisit([]);
   });
 
-  it('focuses input on load', () => {
+  it('Focuses input on load', () => {
     cy.focused()
       .should('have.class', 'new-todo');
   });
 
-  it('accepts input', () => {
+  it('Accepts input', () => {
     const typedText = 'Buy milk';
     cy.get('.new-todo')
       .type(typedText)
@@ -38,7 +38,7 @@ describe('Input form', () => {
         .and('contain', itemText)
     });
 
-    it('shows an error message on a failed submission', () => {
+    it('Shows an error message on a failed submission', () => {
       cy.route({
         url: '/api/todos',
         method: 'POST',

@@ -4,7 +4,11 @@ import TodoForm from './TodoForm'
 import TodoList from './TodoList'
 import Footer from './Footer'
 
-import { loadTodos, saveTodo } from '../lib/service';
+import {
+  loadTodos,
+  saveTodo,
+  destroyTodo
+} from '../lib/service';
 
 
 export default class TodoApp extends Component {
@@ -18,6 +22,7 @@ export default class TodoApp extends Component {
 
     this.handleNewTodoChange = this.handleNewTodoChange.bind(this);
     this.handleTodoSubmit = this.handleTodoSubmit.bind(this);
+    this.handleDeleteTodo = this.handleDeleteTodo.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +35,13 @@ export default class TodoApp extends Component {
     this.setState({
       currentTodo: evt.target.value
     });
+  }
+
+  handleDeleteTodo(id) {
+    destroyTodo(id)
+      .then(() => this.setState({
+        todos: this.state.todos.filter(todo => todo.id !== id)
+      }))
   }
 
   handleTodoSubmit(evt) {
@@ -49,6 +61,9 @@ export default class TodoApp extends Component {
   }
 
   render () {
+    const remaining = this.state.todos
+      .filter(todo => !todo.isComplete).length;
+
     return (
       <Router>
         <div>
@@ -65,9 +80,12 @@ export default class TodoApp extends Component {
             />
           </header>
           <section className="main">
-            <TodoList todos={this.state.todos} />
+            <TodoList
+              todos={this.state.todos}
+              handleDeleteTodo={this.handleDeleteTodo}
+            />
           </section>
-          <Footer />
+          <Footer remaining={remaining} />
         </div>
       </Router>
     )
